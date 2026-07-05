@@ -44,7 +44,11 @@ def test_create_post(client: APIClient) -> None:
 
 @pytest.mark.django_db
 def test_create_post_blank_title_returns_400(client: APIClient) -> None:
-    """공백 제목은 검증 실패 → 400 (자바 @Valid 검증 실패에 대응)."""
+    """공백 제목은 검증 실패 → 400 (자바 @Valid 검증 실패에 대응).
+
+    커스텀 validate_title 이 실제로 동작함을 메시지로 확인한다
+    (CharField 기본 trim 을 꺼서 공백-only 입력이 검증기까지 도달).
+    """
     res = client.post(
         "/api/posts/",
         {"title": "   ", "content": "내용", "author": "홍길동"},
@@ -53,6 +57,7 @@ def test_create_post_blank_title_returns_400(client: APIClient) -> None:
 
     assert res.status_code == status.HTTP_400_BAD_REQUEST
     assert "title" in res.data
+    assert str(res.data["title"][0]) == "제목은 공백일 수 없습니다."
 
 
 # --- Read (GET) ------------------------------------------------------------

@@ -45,9 +45,37 @@ python-study/
 │   └── python_study/
 │       ├── __init__.py
 │       └── basics.py     # 자바 대응 주석이 달린 학습 예제
+├── board_api/            # Django REST Framework 게시판 CRUD 예제 (아래 참고)
+│   ├── board/            # models / serializers / views / urls
+│   ├── config/           # settings / urls (Spring의 application.yml 대응)
+│   └── manage.py
 └── tests/
     └── test_basics.py
 ```
+
+## Django REST Framework 게시판 (board_api)
+
+기초 문법 예제(`basics.py`) 외에, Spring MVC로 REST API를 만들던 경험을
+Django/DRF로 대응시켜 익히는 **게시판 CRUD 예제**가 `board_api/`에 포함되어 있다.
+`ModelViewSet` 하나로 목록/생성/단건조회/수정/부분수정/삭제 5종 CRUD가 자동 제공된다.
+
+| 메서드 | 경로 | Spring Data 대응 |
+| --- | --- | --- |
+| GET | `/api/posts/` | `findAll(Pageable)` |
+| POST | `/api/posts/` | `save` |
+| GET | `/api/posts/{id}/` | `findById` |
+| PUT / PATCH | `/api/posts/{id}/` | `save` / 부분수정 |
+| DELETE | `/api/posts/{id}/` | `deleteById` |
+
+```bash
+pip install -e ".[web,dev]"
+cd board_api
+python manage.py migrate
+python manage.py runserver   # http://127.0.0.1:8000/api/posts/
+```
+
+자세한 계층 대응표(Java/Spring ↔ Django/DRF)와 실행/테스트 방법은
+[`board_api/README.md`](board_api/README.md) 참고.
 
 ## 학습 순서 제안
 
